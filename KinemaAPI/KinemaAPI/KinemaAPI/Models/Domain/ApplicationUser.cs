@@ -1,0 +1,26 @@
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace KinemaAPI.Models.Domain
+{
+    public class ApplicationUser : IdentityUser
+    {
+        [Required]
+        public string DisplayName { get; set; } = string.Empty;
+        [NotMapped]
+        public string[]? Roles { get; set; }
+
+        // Navigation property for the theater this user manages (if user is a manager)
+        public int? ManagedTheaterId { get; set; }
+        [ForeignKey("ManagedTheaterId")]
+        public Theater? ManagedTheater { get; set; }
+
+        // Navigation property for the theater this user works in (if user is an employee)
+        public int? TheaterId { get; set; }
+        [ForeignKey("TheaterId")]
+        public Theater? EmployedTheater { get; set; }
+
+        public int Point { get; set; } = 0;
+    }
+}
