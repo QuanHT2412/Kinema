@@ -1,5 +1,7 @@
 using KinemaAPI.Data;
 using KinemaAPI.Models.Domain;
+using KinemaAPI.Repositories;
+using KinemaAPI.Repositories.Impl;
 using KinemaAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -52,6 +54,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
 // declare dependency injections
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 // add db context
