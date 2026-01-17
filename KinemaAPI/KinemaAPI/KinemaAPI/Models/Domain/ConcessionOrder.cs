@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace KinemaAPI.Models.Domain
+{
+    public class ConcessionOrder
+    {
+        [Key]
+        public int Id { get; set; }
+        public DateTime OrderDate { get; set; }
+        public decimal TotalPrice { get; set; }
+        public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime LastUpdatedAt { get; set; } = DateTime.Now;
+
+        public ICollection<ConcessionOrderDetail> ConcessionOrderDetails { get; set; } = new List<ConcessionOrderDetail>();
+    }
+}
