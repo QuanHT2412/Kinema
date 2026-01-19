@@ -1,4 +1,5 @@
 using KinemaAPI.Data;
+using KinemaAPI.Middlewares;
 using KinemaAPI.Models.Domain;
 using KinemaAPI.Repositories;
 using KinemaAPI.Repositories.Impl;
@@ -104,6 +105,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandler>();
 app.UseHttpsRedirection();
 app.UseCors("AllowClientWebsite");
 app.UseAuthentication();
