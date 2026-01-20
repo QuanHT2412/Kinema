@@ -1,4 +1,5 @@
 using KinemaAPI.Data;
+using KinemaAPI.DbInitializer;
 using KinemaAPI.Mappings;
 using KinemaAPI.Middlewares;
 using KinemaAPI.Models.Domain;
@@ -60,6 +61,7 @@ builder.Services.AddHttpContextAccessor();
 // declare dependency injections
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 
 // add AutoMapper
@@ -120,4 +122,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+SeedDatabase();
+
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        scope.ServiceProvider.GetRequiredService<IDbInitializer>().Initialize();
+    }
+}
