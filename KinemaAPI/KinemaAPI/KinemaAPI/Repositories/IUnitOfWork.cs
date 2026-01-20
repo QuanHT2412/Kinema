@@ -2,6 +2,7 @@
 {
     public interface IUnitOfWork
     {
+        IApplicationUserRepository ApplicationUser { get; }
 
         Task SaveAsync();
     }
