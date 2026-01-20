@@ -1,4 +1,5 @@
 using KinemaAPI.Data;
+using KinemaAPI.Mappings;
 using KinemaAPI.Middlewares;
 using KinemaAPI.Models.Domain;
 using KinemaAPI.Repositories;
@@ -60,6 +61,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
+// add AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 // add db context
 builder.Services.AddDbContext<KinemaDbContext>(options =>
