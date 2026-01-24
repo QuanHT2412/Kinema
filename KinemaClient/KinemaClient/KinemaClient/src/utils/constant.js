@@ -1,0 +1,31 @@
+export const ERROR_NOTIFICATION = "error";
+export const SUCCESS_NOTIFICATION = "success";
+export const INFO_NOTIFICATION = "info";
+export const WARNING_NOTIFICATION = "warning";
+
+// payment
+export const PAYMENT_STATUS_SUCCESS = "Success";
+export const PAYMENT_STATUS_PENDING = "Pending";
+export const PAYMENT_STATUS_FAILED = "Failed";
+export const PAYMENT_STATUS_CANCELLED = "Cancelled";
+
+// roles
+export const ROLE_ADMIN = "Admin";
+export const ROLE_CUSTOMER = "Customer";
+export const ROLE_MANAGER = "Manager";
+export const ROLE_EMPLOYEE = "Employee";
+
+// seat constants
+export const SEAT_TYPE_NORMAL = "Normal";
+export const SEAT_TYPE_VIP = "Vip";
+
+// Maximum number of seats a user can select
+export const MAX_SEAT_SELECTION = 5;
+
+// Promotion types
+export const PROMOTION_TYPE_PERCENTAGE = "Percentage";
+export const PROMOTION_TYPE_FIXED = "FixedAmount";
+
+// Points to VND conversion ratio
+export const POINTS_TO_VND_RATIO = 10; // 1 point = 10 VND
+export const MINIMUM_TOTAL_PRICE = 5000; // Minimum price after all discounts
