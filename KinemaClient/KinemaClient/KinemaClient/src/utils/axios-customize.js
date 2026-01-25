@@ -12,6 +12,21 @@ customAxios.defaults.headers.common[
   "Authorization"
 ] = `Bearer ${localStorage.getItem("accessToken")}`;
 
+// Add a request interceptor
+customAxios.interceptors.request.use(
+  (config) => {
+    // // If the access token is available, set it in the headers
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Add a response interceptor
 customAxios.interceptors.response.use(
   (response) => {
