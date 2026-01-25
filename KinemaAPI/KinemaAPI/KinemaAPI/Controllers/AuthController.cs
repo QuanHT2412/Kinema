@@ -146,6 +146,17 @@ namespace KinemaAPI.Controllers
                 });
             }
 
+            var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if (!isEmailConfirmed)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "Email not confirmed",
+                    StatusCode = 400,
+                    Status = "Error"
+                });
+            }
+
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!isPasswordValid)
             {
