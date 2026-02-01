@@ -18,6 +18,8 @@ namespace KinemaAPI.Mappings
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.LockoutEnd.HasValue && src.LockoutEnd.Value > DateTime.UtcNow))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber ?? string.Empty));
+            CreateMap<Province, ProvinceDTO>();
+
         }
     }
 
