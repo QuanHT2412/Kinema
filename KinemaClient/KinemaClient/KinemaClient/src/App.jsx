@@ -18,6 +18,9 @@ const Register = lazy(() => import("./pages/Register"));
 const ControlPanelLayout = lazy(() =>
   import("./layouts/control-panel/ControlPanelLayout")
 );
+const ProvinceLayout = lazy(() =>
+  import("./features/admin/province/ProvinceLayout")
+);
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -83,6 +86,14 @@ const router = createBrowserRouter([
     ),
     errorElement: <PageNotFound />,
     children: [
+      {
+        path: "provinces",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <ProvinceLayout />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);
