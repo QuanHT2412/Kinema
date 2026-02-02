@@ -1,6 +1,0 @@
-@KinemaAPI_HostAddress = http://localhost:5115
-
-GET {{KinemaAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
