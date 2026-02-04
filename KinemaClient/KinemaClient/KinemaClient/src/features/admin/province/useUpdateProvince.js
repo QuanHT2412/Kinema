@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProvince as updateProvinceApi } from "../../../services/apiProvince";
 import { useDispatch } from "react-redux";
 import { notify } from "../../../redux/notificationSlice";
@@ -8,10 +8,12 @@ import {
 } from "../../../utils/constant";
 
 export function useUpdateProvince() {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const { isPending, mutate } = useMutation({
     mutationFn: updateProvinceApi,
     onSuccess: () => {
+      queryClient.invalidateQueries(["provinces"]);
       dispatch(
         notify({
           type: SUCCESS_NOTIFICATION,
