@@ -467,11 +467,12 @@ namespace KinemaAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeOnly?>("ClosingTime")
-                        .HasColumnType("time");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -486,9 +487,6 @@ namespace KinemaAPI.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeOnly?>("OpeningTime")
-                        .HasColumnType("time");
 
                     b.Property<string>("Phone")
                         .IsRequired()
