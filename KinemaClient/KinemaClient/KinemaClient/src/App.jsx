@@ -21,6 +21,9 @@ const ControlPanelLayout = lazy(() =>
 const ProvinceLayout = lazy(() =>
   import("./features/admin/province/ProvinceLayout")
 );
+const TheaterLayout = lazy(() =>
+  import("./features/admin/theater/TheaterLayout")
+);
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -91,6 +94,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <ProvinceLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "theaters",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <TheaterLayout />
           </Suspense>
         ),
       },
