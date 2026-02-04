@@ -38,7 +38,20 @@ customAxios.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Handle unauthorized access
       console.error("Unauthorized access - authentication required");
-      window.location.href = "/login";
+
+      // Check if the request was for the user profile API
+      const isProfileRequest = error.config.url.includes("/api/user/profile");
+
+      // Only emit auth:unauthorized if:
+      // 1. We're not already on the login page (prevents infinite loops)
+      // 2. The request is NOT for the user profile API (allow this to fail gracefully)
+      // if (!window.location.pathname.includes("/login") && !isProfileRequest) {
+      //   eventSystem.emit("auth:unauthorized");
+      // }
+
+      if (!isProfileRequest) {
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }
