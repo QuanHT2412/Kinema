@@ -483,9 +483,6 @@ namespace KinemaAPI.Migrations
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ManagerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -501,10 +498,6 @@ namespace KinemaAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagerId")
-                        .IsUnique()
-                        .HasFilter("[ManagerId] IS NOT NULL");
 
                     b.HasIndex("ProvinceId");
 
@@ -726,8 +719,13 @@ namespace KinemaAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ManagedTheaterId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("TheaterId")
                         .HasColumnType("int");
+
+                    b.HasIndex("ManagedTheaterId");
 
                     b.HasIndex("TheaterId");
 
@@ -846,18 +844,11 @@ namespace KinemaAPI.Migrations
 
             modelBuilder.Entity("KinemaAPI.Models.Domain.Theater", b =>
                 {
-                    b.HasOne("KinemaAPI.Models.Domain.ApplicationUser", "Manager")
-                        .WithOne("ManagedTheater")
-                        .HasForeignKey("KinemaAPI.Models.Domain.Theater", "ManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("KinemaAPI.Models.Domain.Province", "Province")
                         .WithMany()
                         .HasForeignKey("ProvinceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Manager");
 
                     b.Navigation("Province");
                 });
@@ -915,21 +906,16 @@ namespace KinemaAPI.Migrations
 
             modelBuilder.Entity("KinemaAPI.Models.Domain.ApplicationUser", b =>
                 {
+                    b.HasOne("KinemaAPI.Models.Domain.Theater", "ManagedTheater")
+                        .WithMany()
+                        .HasForeignKey("ManagedTheaterId");
+
                     b.HasOne("KinemaAPI.Models.Domain.Theater", "EmployedTheater")
-                        .WithMany("Employees")
-                        .HasForeignKey("TheaterId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithMany()
+                        .HasForeignKey("TheaterId");
 
                     b.Navigation("EmployedTheater");
-                });
 
-            modelBuilder.Entity("KinemaAPI.Models.Domain.Theater", b =>
-                {
-                    b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("KinemaAPI.Models.Domain.ApplicationUser", b =>
-                {
                     b.Navigation("ManagedTheater");
                 });
 #pragma warning restore 612, 618
