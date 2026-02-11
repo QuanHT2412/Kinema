@@ -18,7 +18,7 @@ export function useCreateProvince() {
       dispatch(
         notify({
           type: SUCCESS_NOTIFICATION,
-          message: "Province created succesfully!",
+          message: "Province created successfully!",
         })
       );
     },
