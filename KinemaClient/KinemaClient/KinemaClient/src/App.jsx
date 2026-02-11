@@ -24,6 +24,9 @@ const ProvinceLayout = lazy(() =>
 const TheaterLayout = lazy(() =>
   import("./features/admin/theater/TheaterLayout")
 );
+const ManagerLayout = lazy(() =>
+  import("./features/admin/manager/ManagerLayout")
+);
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -89,6 +92,14 @@ const router = createBrowserRouter([
     ),
     errorElement: <PageNotFound />,
     children: [
+      {
+        path: "managers",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <ManagerLayout />
+          </Suspense>
+        ),
+      },
       {
         path: "provinces",
         element: (
