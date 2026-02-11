@@ -14,22 +14,22 @@ import { NavLink } from "react-router-dom";
 function Footer() {
   return (
     <footer className="px-4 divide-y bg-neutral-900 text-gray-100">
-      <div className="container flex flex-col justify-between py-10 mx-auto space-y-8 ">
-        <div className="">
+      <div className="container flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0">
+        <div className="lg:w-1/4">
           <NavLink
             to="/"
             aria-label="Back to homepage"
             className="flex items-center"
           >
-            <span className="text-2xl ">🍿</span>
-            <span className="text-2xl font-medium text-red-500 uppercase ">
+            <span className="text-2xl sm:text-3xl md:text-4xl">🍿</span>
+            <span className="text-2xl font-medium text-red-500 uppercase sm:text-3xl md:text-4xl">
               Kinema
             </span>
           </NavLink>
         </div>
-        <div className="grid grid-cols-1 text-sm gap-x-3 gap-y-8 ">
-          <div className="hidden space-y-3">
-            <h3 className="tracking-wide text-zinc-200 title-widget text-sm font-medium">
+        <div className="grid grid-cols-1 text-sm gap-x-3 gap-y-8 lg:w-3/4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="hidden sm:block space-y-3">
+            <h3 className="tracking-wide text-zinc-200 title-widget text-sm sm:text-lg font-medium">
               GIỚI THIỆU
             </h3>
             <ul className="space-y-3">
@@ -67,8 +67,8 @@ function Footer() {
               </li>
             </ul>
           </div>
-          <div className="hidden space-y-3">
-            <h3 className="tracking-wide  text-zinc-200 title-widget text-sm font-medium">
+          <div className="hidden sm:block space-y-3">
+            <h3 className="tracking-wide  text-zinc-200 title-widget text-sm sm:text-lg font-medium">
               HỖ TRỢ
             </h3>
             <ul className="space-y-3">
@@ -107,7 +107,7 @@ function Footer() {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className=" text-zinc-200 title-widget uppercase text-sm font-medium">
+            <h3 className=" text-zinc-200 title-widget uppercase text-sm sm:text-lg font-medium">
               KẾT NỐI Kinema
             </h3>
             <ul className="space-y-3">
@@ -135,7 +135,7 @@ function Footer() {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className=" text-zinc-200 title-widget text-sm font-medium">
+            <h3 className=" text-zinc-200 title-widget text-sm sm:text-lg font-medium">
               DOWNLOAD APP
             </h3>
             <ul className="space-y-3">
