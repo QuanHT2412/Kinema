@@ -27,6 +27,9 @@ const TheaterLayout = lazy(() =>
 const ManagerLayout = lazy(() =>
   import("./features/admin/manager/ManagerLayout")
 );
+const EmployeeLayout = lazy(() =>
+  import("./features/admin/Employee/EmployeeLayout")
+);
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -97,6 +100,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <ManagerLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "employees",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <EmployeeLayout />
           </Suspense>
         ),
       },
