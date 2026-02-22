@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./redux/userSlice";
 import notificationReducer from "./redux/notificationSlice";
 import employeeReducer from "./redux/employeeSlice";
+import customerReducer from "./redux/customerSlice";
 
 const store = configureStore({
   reducer: {
@@ -9,6 +10,7 @@ const store = configureStore({
     user: userReducer,
     notification: notificationReducer,
     employee: employeeReducer,
+    customer: customerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
