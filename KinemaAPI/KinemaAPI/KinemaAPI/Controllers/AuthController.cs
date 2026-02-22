@@ -140,7 +140,7 @@ namespace KinemaAPI.Controllers
             {
                 return BadRequest(new ErrorResponseDTO
                 {
-                    Message = "Invalid email or pasword",
+                    Message = "Invalid email or password",
                     StatusCode = 400,
                     Status = "Error"
                 });
@@ -162,7 +162,7 @@ namespace KinemaAPI.Controllers
             {
                 return BadRequest(new ErrorResponseDTO
                 {
-                    Message = "Invalid email or pasword",
+                    Message = "Invalid email or password",
                     StatusCode = 400,
                     Status = "Error"
                 });
