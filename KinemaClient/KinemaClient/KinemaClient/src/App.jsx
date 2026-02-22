@@ -30,6 +30,9 @@ const ManagerLayout = lazy(() =>
 const EmployeeLayout = lazy(() =>
   import("./features/admin/Employee/EmployeeLayout")
 );
+const CustomerLayout = lazy(() =>
+  import("./features/admin/customer/CustomerLayout")
+);
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -108,6 +111,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <EmployeeLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "customers",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <CustomerLayout />
           </Suspense>
         ),
       },
