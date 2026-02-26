@@ -168,6 +168,17 @@ namespace KinemaAPI.Controllers
                 });
             }
 
+            // check if user is locked out
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "User account is locked",
+                    StatusCode = 403,
+                    Status = "Error"
+                });
+            }
+
             // Generate JWT token here
             var roles = await _userManager.GetRolesAsync(user);
             var token = _tokenService.CreateJwtToken(user, roles.ToList());
