@@ -6,6 +6,7 @@ using KinemaAPI.Models.DTO.Requests;
 using KinemaAPI.Models.DTO.Responses;
 using KinemaAPI.Repositories;
 using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KinemaAPI.Controllers.Admin
@@ -67,6 +68,7 @@ namespace KinemaAPI.Controllers.Admin
 
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> CreateTheater([FromBody] CreateTheaterRequestDTO request)
         {
             var theater = new Theater
@@ -93,6 +95,7 @@ namespace KinemaAPI.Controllers.Admin
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> UpdateTheater(int id, [FromBody] UpdateTheaterRequestDTO request)
         {
             var theater = await _unitOfWork.Theater.GetOneAsync(t => t.Id == id);
@@ -126,6 +129,7 @@ namespace KinemaAPI.Controllers.Admin
 
         // enpoint for locking/unlocking theater
         [HttpPut("{id}/lock")]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> LockUnlockTheater(int id)
         {
             var theater = await _unitOfWork.Theater.GetOneAsync(t => t.Id == id);

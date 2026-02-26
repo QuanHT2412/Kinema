@@ -7,6 +7,7 @@ using KinemaAPI.Models.DTO.Requests;
 using KinemaAPI.Models.DTO.Responses;
 using KinemaAPI.Repositories;
 using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
@@ -71,6 +72,7 @@ namespace KinemaAPI.Controllers.Admin
 
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> CreateProvince([FromBody] CreateProvinceRequestDTO request)
         {
 
@@ -90,6 +92,7 @@ namespace KinemaAPI.Controllers.Admin
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> UpdateProvince(int id, [FromBody] UpdateProvinceRequestDTO request)
         {
             var province = await _unitOfWork.Province.GetOneAsync(p => p.Id == id);
@@ -115,6 +118,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> DeleteProvince(int id)
         {
             var province = await _unitOfWork.Province.GetOneAsync(p => p.Id == id);
