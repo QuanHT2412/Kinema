@@ -16,10 +16,10 @@ function Header() {
         <nav
           style={{ borderBottom: "1px solid #c1c0c04a" }}
           id="navBarHeader"
-          className="transition-all duration-500 flex items-center justify-between flex-wrap bg-neutral-900 py-2 px-4 w-full"
+          className="transition-all duration-500 flex items-center justify-between flex-wrap bg-neutral-900 py-2 px-4 md:py-4 w-full"
         >
           {/* Mobile menu button */}
-          <div className="block ">
+          <div className="block lg:hidden">
             <button
               onClick={() => setIsOpen(true)}
               id="nav-toggle"
@@ -36,24 +36,24 @@ function Header() {
             </button>
           </div>
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0 text-white mr-4 ">
+          <div className="flex items-center flex-shrink-0 text-white mr-4 md:mx-5">
             <NavLink
               to="/"
               aria-label="Back to homepage"
               className="flex items-center"
             >
-              <span className="text-xl ">🍿</span>
-              <span className="text-xl font-medium text-red-500 uppercase ">
+              <span className="text-xl sm:text-2xl md:text-2xl">🍿</span>
+              <span className="text-xl font-medium text-red-500 uppercase sm:text-2xl ">
                 Kinema
               </span>
             </NavLink>
           </div>
           {/* Navigation links for larger screens */}
           <div
-            className="w-full flex-grow hidden  pt-3 "
+            className="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden  pt-3 lg:pt-0"
             id="nav-content"
           >
-            <ul className="list-reset justify-center flex-1 items-center mb-0">
+            <ul className="list-reset lg:flex justify-center flex-1 items-center mb-0">
               <li className="mr-3">
                 <Link
                   to="/"
@@ -97,7 +97,7 @@ function Header() {
           </div>
         </nav>
         {/* Add a spacer div to prevent content from being hidden under the fixed header */}
-        {/* <div className="h-14 "></div> */}
+        {/* <div className="h-14 md:h-16"></div> */}
       </header>
     </>
   );
