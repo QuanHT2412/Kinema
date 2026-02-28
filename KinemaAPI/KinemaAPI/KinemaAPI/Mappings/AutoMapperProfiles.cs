@@ -32,6 +32,12 @@ namespace KinemaAPI.Mappings
             CreateMap<Theater, TheaterDTO>()
                 .ForMember(dest => dest.Province, opt => opt.MapFrom(src => src.Province != null ? src.Province : null));
 
+            // Movie mappings
+            CreateMap<Movie, MovieDTO>()
+                .ForMember(des => des.PosterUrl, otp => otp.MapFrom(src => $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}/Images/{src.PosterUrl}"));
+            CreateMap<CreateMovieRequestDTO, Movie>();
+            CreateMap<UpdateMovieRequestDTO, Movie>();
+
             CreateMap<Screen, ScreenDTO>()
                 .ForMember(dest => dest.TheaterName, opt => opt.MapFrom(src => src.Theater != null ? src.Theater.Name : string.Empty));
 
