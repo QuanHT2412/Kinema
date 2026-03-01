@@ -5,6 +5,7 @@ import employeeReducer from "./redux/employeeSlice";
 import customerReducer from "./redux/customerSlice";
 import screenReducer from "./redux/screenSlice";
 import seatReducer from "./redux/seatSlice";
+import movieReducer from "./redux/movieSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     customer: customerReducer,
     screen: screenReducer,
     seat: seatReducer,
+    movie: movieReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
