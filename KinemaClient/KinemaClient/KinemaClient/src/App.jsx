@@ -33,6 +33,7 @@ const EmployeeLayout = lazy(() =>
 const CustomerLayout = lazy(() =>
   import("./features/admin/customer/CustomerLayout")
 );
+const MovieLayout = lazy(() => import("./features/manager/movie/MovieLayout"));
 const ScreenLayout = lazy(() => import("./features/admin/screen/ScreenLayout"));
 const SeatLayout = lazy(() => import("./features/admin/seat/SeatLayout"));
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
@@ -105,6 +106,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <ManagerLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "movies",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <MovieLayout />
           </Suspense>
         ),
       },
