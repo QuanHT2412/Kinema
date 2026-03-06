@@ -25,7 +25,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [Authorize(Roles = Constants.Role_Admin)]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> GetScreensByTheaterId([FromQuery] int theaterId)
         {
             List<Screen> screens;
@@ -58,7 +58,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = Constants.Role_Admin)]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> GetScreenById(int id)
         {
             var screen = await _unitOfWork.Screen.GetOneAsync(s => s.Id == id, includeProperties: "Theater");
@@ -135,7 +135,7 @@ namespace KinemaAPI.Controllers.Admin
 
         [HttpPut("{id}")]
         [ValidateModel]
-        [Authorize(Roles = Constants.Role_Admin)]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> UpdateScreen(int id, [FromBody] UpdateScreenRequestDTO request)
         {
             var screen = await _unitOfWork.Screen.GetOneAsync(s => s.Id == id);
@@ -162,7 +162,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("{id}/enable")]
-        [Authorize(Roles = Constants.Role_Admin)]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> EnableScreen(int id)
         {
             var screen = await _unitOfWork.Screen.GetOneAsync(s => s.Id == id);
@@ -189,7 +189,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("{id}/disable")]
-        [Authorize(Roles = Constants.Role_Admin)]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> DisableScreen(int id)
         {
             var screen = await _unitOfWork.Screen.GetOneAsync(s => s.Id == id);
