@@ -41,6 +41,8 @@ namespace KinemaAPI.Mappings
             CreateMap<Screen, ScreenDTO>()
                 .ForMember(dest => dest.TheaterName, opt => opt.MapFrom(src => src.Theater != null ? src.Theater.Name : string.Empty));
 
+            // ShowTime mappings
+            CreateMap<ShowTime, ShowTimeDTO>();
             CreateMap<Seat, SeatDTO>();
 
         }

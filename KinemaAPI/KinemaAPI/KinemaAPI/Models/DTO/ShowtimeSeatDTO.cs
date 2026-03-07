@@ -1,0 +1,11 @@
+﻿namespace KinemaAPI.Models.DTO
+{
+    public class ShowtimeSeatDTO
+    {
+        public int Id { get; set; }
+        public string SeatRow { get; set; }
+        public int SeatNumber { get; set; }
+        public string SeatType { get; set; }
+        public bool IsBooked { get; set; }
+    }
+}
