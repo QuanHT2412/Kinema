@@ -43,6 +43,7 @@ namespace KinemaAPI.Mappings
 
             // ShowTime mappings
             CreateMap<ShowTime, ShowTimeDTO>();
+            CreateMap<UpdateShowTimeRequestDTO, ShowTime>();
             CreateMap<Seat, SeatDTO>();
 
         }
