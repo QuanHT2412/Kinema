@@ -41,6 +41,13 @@
                 errorMsg = "File size exceeds the maximum limit of 10MB.";
                 return false;
             }
+            var validExtenstions = new string[] { ".jpg", ".jpeg", ".png" };
+            var fileExtension = Path.GetExtension(file.FileName);
+            if (!validExtenstions.Contains(fileExtension.ToLower()))
+            {
+                errorMsg = "Unsupported file extension. Only .jpg, .jpeg, and .png are allowed.";
+                return false;
+            }
             return true;
         }
     }
