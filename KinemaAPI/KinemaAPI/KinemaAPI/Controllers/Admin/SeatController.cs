@@ -4,6 +4,7 @@ using KinemaAPI.Models.DTO;
 using KinemaAPI.Models.DTO.Responses;
 using KinemaAPI.Repositories;
 using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KinemaAPI.Controllers.Admin
@@ -22,6 +23,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> GetSeatsInScreen([FromQuery] int screenId)
         {
             if (screenId <= 0)
@@ -41,6 +43,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("add-row")]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> AddOneRow([FromQuery] int screenId)
         {
             // get the screen
@@ -87,6 +90,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("add-column")]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> AddOneColumn([FromQuery] int screenId)
         {
             // get the screen
@@ -131,6 +135,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("remove-row")]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> RemoveOneRow([FromQuery] int screenId)
         {
             // get the screen
@@ -193,6 +198,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("remove-column")]
+        [Authorize(Roles = Constants.Role_Admin)]
         public async Task<IActionResult> RemoveOneColumn([FromQuery] int screenId)
         {
             // get the screen
@@ -253,6 +259,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("{id}/disable")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> DisableSeat(int id)
         {
             var seat = await _unitOfWork.Seat.GetOneAsync(s => s.Id == id && s.IsRemoved == false);
@@ -276,6 +283,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("{id}/enable")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> EnableSeat(int id)
         {
             var seat = await _unitOfWork.Seat.GetOneAsync(s => s.Id == id && s.IsRemoved == false);
@@ -299,6 +307,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("{id}/set-vip")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> SetVipSeat(int id)
         {
             var seat = await _unitOfWork.Seat.GetOneAsync(s => s.Id == id && s.IsRemoved == false);
@@ -322,6 +331,7 @@ namespace KinemaAPI.Controllers.Admin
         }
 
         [HttpPut("{id}/set-normal")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Admin}")]
         public async Task<IActionResult> SetNormalSeat(int id)
         {
             var seat = await _unitOfWork.Seat.GetOneAsync(s => s.Id == id && s.IsRemoved == false);
