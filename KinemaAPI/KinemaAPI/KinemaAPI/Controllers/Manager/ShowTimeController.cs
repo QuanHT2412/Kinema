@@ -1,0 +1,203 @@
+using AutoMapper;
+using KinemaAPI.CustomActionFilters;
+using KinemaAPI.Models.Domain;
+using KinemaAPI.Models.DTO;
+using KinemaAPI.Models.DTO.Requests;
+using KinemaAPI.Models.DTO.Responses;
+using KinemaAPI.Repositories;
+using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace KinemaAPI.Controllers.Manager
+{
+    [Route("api/showtimes")]
+    [ApiController]
+    public class ShowTimeController : ControllerBase
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public ShowTimeController(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllShowTimes([FromQuery] ShowTimesFilterRequestDTO request)
+        {
+            var showtimes = await _unitOfWork.ShowTime.GetShowtimes(request);
+
+            if (showtimes == null || !showtimes.Any())
+            {
+                return Ok(new SuccessResponseDTO
+                {
+                    Data = new List<ShowTimeDTO>(),
+                    Message = "No ShowTimes found."
+                });
+            }
+            // group showtime by movie and date
+            var showTimesGroup = showtimes.GroupBy(s => new { s.Movie, s.Date })
+                .Select(g => new
+                {
+                    Movie = _mapper.Map<MovieDTO>(g.Key.Movie),
+                    g.Key.Date,
+                    ShowTimes = g.Select(s => _mapper.Map<ShowTimeDTO>(s))
+                });
+
+            return Ok(new SuccessResponseDTO
+            {
+                Data = showTimesGroup,
+                Message = "ShowTimes retrieved successfully."
+            });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetShowTimeById(int id)
+        {
+            var showTime = await _unitOfWork.ShowTime.GetOneAsync(s => s.Id == id);
+            if (showTime == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "ShowTime not found.",
+                    StatusCode = 404
+                });
+            }
+            return Ok(new SuccessResponseDTO
+            {
+                Data = _mapper.Map<ShowTimeDTO>(showTime),
+                Message = "ShowTime retrieved successfully."
+            });
+        }
+
+        [HttpPost]
+        [ValidateModel]
+        [Authorize(Roles = Constants.Role_Manager)]
+        public async Task<IActionResult> CreateShowTime([FromBody] CreateShowTimeRequestDTO request)
+        {
+            var results = new List<object>();
+            var showTimesToAdd = new List<ShowTime>();
+
+            foreach (var showTimeData in request.ShowTimes)
+            {
+                var sameDayShowTimes = (await _unitOfWork.ShowTime.GetAllAsync(
+                    s => s.ScreenId == request.ScreenId && s.Date.Date == showTimeData.Date.Date
+                )).OrderBy(s => s.StartTime).ToList();
+
+
+                for (int i = 0; i < showTimeData.StartTimes.Count; i++)
+                {
+                    bool isValidShowtime = true;
+                    var startTime = TimeSpan.Parse(showTimeData.StartTimes[i]);
+                    var endTime = TimeSpan.Parse(showTimeData.EndTimes[i]);
+
+                    // validate showtime conflict
+                    foreach (var st in sameDayShowTimes)
+                    {
+                        if (startTime < st.EndTime &&
+                                                       endTime > st.StartTime)
+                        {
+                            isValidShowtime = false;
+                            break;
+                        }
+                    }
+
+                    // create showtime
+                    var showTime = new ShowTime
+                    {
+                        MovieId = request.MovieId,
+                        ScreenId = request.ScreenId,
+                        Date = showTimeData.Date,
+                        StartTime = startTime,
+                        EndTime = endTime,
+                        TicketPrice = request.TicketPrice,
+                        VipTicketPrice = request.VipTicketPrice,
+                        CreatedAt = DateTime.Now,
+                        LastUpdatedAt = DateTime.Now,
+                        IsActive = true
+                    };
+
+                    if (!isValidShowtime)
+                    {
+                        results.Add(new { Success = false, ShowTime = showTime });
+                        break;
+                    }
+
+                    showTimesToAdd.Add(showTime);
+                    results.Add(new { Success = true, ShowTime = _mapper.Map<ShowTimeDTO>(showTime) });
+
+                }
+            }
+
+            if (showTimesToAdd.Any())
+            {
+                await _unitOfWork.ShowTime.AddRangeAsync(showTimesToAdd);
+                await _unitOfWork.SaveAsync();
+            }
+
+            return Ok(new SuccessResponseDTO
+            {
+                Data = results,
+                Message = "ShowTime(s) created."
+            });
+        }
+
+        [HttpPut("{id}")]
+        [ValidateModel]
+        [Authorize(Roles = Constants.Role_Manager)]
+        public async Task<IActionResult> UpdateShowTime(int id, [FromBody] UpdateShowTimeRequestDTO request)
+        {
+            var showTime = await _unitOfWork.ShowTime.GetOneAsync(s => s.Id == id);
+            if (showTime == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "ShowTime not found.",
+                    StatusCode = 404
+                });
+            }
+
+            // Lấy các showtime khác cùng movie, screen, date (trừ chính nó)
+            var sameDayShowTimes = (await _unitOfWork.ShowTime.GetAllAsync(
+                s => s.Id != id && s.MovieId == showTime.MovieId && s.ScreenId == showTime.ScreenId && s.Date.Date == showTime.Date.Date
+            )).OrderBy(s => s.StartTime).ToList();
+
+
+            showTime.StartTime = request.StartTime;
+            showTime.EndTime = request.EndTime;
+            showTime.TicketPrice = request.TicketPrice;
+            showTime.VipTicketPrice = request.VipTicketPrice;
+            showTime.LastUpdatedAt = DateTime.Now;
+            _unitOfWork.ShowTime.Update(showTime);
+            await _unitOfWork.SaveAsync();
+            return Ok(new SuccessResponseDTO
+            {
+                Data = _mapper.Map<ShowTimeDTO>(showTime),
+                Message = "ShowTime updated successfully."
+            });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.Role_Manager)]
+        public async Task<IActionResult> DeleteShowTime(int id)
+        {
+            var showTime = await _unitOfWork.ShowTime.GetOneAsync(s => s.Id == id);
+            if (showTime == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "ShowTime not found.",
+                    StatusCode = 404
+                });
+            }
+            _unitOfWork.ShowTime.Remove(showTime);
+            await _unitOfWork.SaveAsync();
+            return Ok(new SuccessResponseDTO
+            {
+                Message = "ShowTime deleted successfully."
+            });
+        }
+    }
+}
