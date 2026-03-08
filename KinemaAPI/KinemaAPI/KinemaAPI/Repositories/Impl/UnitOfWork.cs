@@ -8,6 +8,7 @@ namespace KinemaAPI.Repositories.Impl
         public IProvinceRepository Province { get; private set; }
         public ITheaterRepository Theater { get; private set; }
         public IMovieRepository Movie { get; private set; }
+        public IShowTimeRepository ShowTime { get; private set; }
         public ISeatRepository Seat { get; private set; }
         public IScreenRepository Screen { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
@@ -18,6 +19,7 @@ namespace KinemaAPI.Repositories.Impl
             Province = new ProvinceRepository(_db);
             Theater = new TheaterRepository(_db);
             Movie = new MovieRepository(_db);
+            ShowTime = new ShowTimeRepository(_db);
             Seat = new SeatRepository(_db);
             Screen = new ScreenRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);

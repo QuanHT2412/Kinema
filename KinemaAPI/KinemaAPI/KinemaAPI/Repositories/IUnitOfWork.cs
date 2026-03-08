@@ -5,6 +5,7 @@
         IProvinceRepository Province { get; }
         ITheaterRepository Theater { get; }
         IMovieRepository Movie { get; }
+        IShowTimeRepository ShowTime { get; }
         ISeatRepository Seat { get; }
         IScreenRepository Screen { get; }
         IApplicationUserRepository ApplicationUser { get; }
