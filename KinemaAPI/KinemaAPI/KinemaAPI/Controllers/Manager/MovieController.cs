@@ -7,6 +7,7 @@ using KinemaAPI.Models.DTO.Responses;
 using KinemaAPI.Repositories;
 using KinemaAPI.Services;
 using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KinemaAPI.Controllers.Manager
@@ -73,6 +74,7 @@ namespace KinemaAPI.Controllers.Manager
 
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = Constants.Role_Manager)]
         public async Task<IActionResult> CreateMovie([FromForm] CreateMovieRequestDTO request)
         {
             var newMovie = new Movie
@@ -138,6 +140,7 @@ namespace KinemaAPI.Controllers.Manager
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [Authorize(Roles = Constants.Role_Manager)]
         public async Task<IActionResult> UpdateMovie(int id, [FromForm] UpdateMovieRequestDTO request)
         {
             var movie = await _unitOfWork.Movie.GetOneAsync(m => m.Id == id);
@@ -204,6 +207,7 @@ namespace KinemaAPI.Controllers.Manager
         }
 
         [HttpPut("{id}/disable")]
+        [Authorize(Roles = $"{Constants.Role_Manager}")]
         public async Task<IActionResult> DisableMovie(int id)
         {
             var movie = await _unitOfWork.Movie.GetOneAsync(m => m.Id == id);
@@ -229,6 +233,7 @@ namespace KinemaAPI.Controllers.Manager
         }
 
         [HttpPut("{id}/enable")]
+        [Authorize(Roles = $"{Constants.Role_Manager}")]
         public async Task<IActionResult> EnableMovie(int id)
         {
             var movie = await _unitOfWork.Movie.GetOneAsync(m => m.Id == id);
