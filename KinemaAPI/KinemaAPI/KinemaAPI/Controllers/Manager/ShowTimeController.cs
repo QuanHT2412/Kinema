@@ -165,6 +165,21 @@ namespace KinemaAPI.Controllers.Manager
             )).OrderBy(s => s.StartTime).ToList();
 
 
+            // kiểm tra conflict showtime
+            foreach (var st in sameDayShowTimes)
+            {
+                // Nếu hai suất chiếu giao nhau trong khoảng 10 phút thì conflict
+                if (request.StartTime < st.EndTime.Add(TimeSpan.FromMinutes(10)) &&
+                    request.EndTime > st.StartTime.Add(TimeSpan.FromMinutes(-10)))
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = "Showtime update conflict with another showtime.",
+                        StatusCode = 400
+                    });
+                }
+            }
+
             showTime.StartTime = request.StartTime;
             showTime.EndTime = request.EndTime;
             showTime.TicketPrice = request.TicketPrice;
