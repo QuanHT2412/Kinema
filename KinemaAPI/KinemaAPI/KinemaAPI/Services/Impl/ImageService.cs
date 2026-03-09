@@ -36,9 +36,9 @@
         public bool ValidateImage(IFormFile file, out string? errorMsg)
         {
             errorMsg = null;
-            if (file.Length > 10 * 1024 * 1024)
+            if (file.Length > 5 * 1024 * 1024)
             {
-                errorMsg = "File size exceeds the maximum limit of 10MB.";
+                errorMsg = "File size exceeds the maximum limit of 5MB.";
                 return false;
             }
             var validExtenstions = new string[] { ".jpg", ".jpeg", ".png" };
