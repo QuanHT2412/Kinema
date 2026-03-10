@@ -5,7 +5,7 @@ import {
   setLoading,
 } from "../../../redux/manageShowtimeSlice";
 import { format } from "date-fns";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notify } from "../../../redux/notificationSlice";
 import {
   ERROR_NOTIFICATION,
@@ -13,6 +13,7 @@ import {
 } from "../../../utils/constant";
 
 export default function useCreateShowTimes() {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const newShowtime = useSelector((state) => state.manageShowtime.newShowtime);
 
@@ -59,6 +60,7 @@ export default function useCreateShowTimes() {
           description: `${successCount} showtimes added successfully, ${errorCount} failed.`,
         })
       );
+      queryClient.invalidateQueries("showtimes");
       dispatch(resetNewShowtime());
       dispatch(setLoading({ key: "create", value: false }));
     },

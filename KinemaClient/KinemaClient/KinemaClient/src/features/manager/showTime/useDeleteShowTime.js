@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteShowTime } from "../../../services/apiShowTime";
 import { useDispatch } from "react-redux";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../../../utils/constant";
 
 export default function useDeleteShowTime() {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
@@ -27,6 +28,7 @@ export default function useDeleteShowTime() {
           message: "Showtime deleted successfully",
         })
       );
+      queryClient.invalidateQueries("showtimes");
       dispatch(clearSelectedShowtime());
       dispatch(setLoading({ key: "delete", value: false }));
     },

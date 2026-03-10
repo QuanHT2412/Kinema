@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateShowTime } from "../../../services/apiShowTime";
 import { useDispatch } from "react-redux";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../../../utils/constant";
 
 export default function useUpdateShowTime() {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
@@ -33,6 +34,7 @@ export default function useUpdateShowTime() {
           message: "Showtime updated successfully",
         })
       );
+      queryClient.invalidateQueries("showtimes");
       dispatch(clearSelectedShowtime());
       dispatch(setLoading({ key: "update", value: false }));
     },

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createShowTimes } from "../../../services/apiShowTime";
 import { format } from "date-fns";
 import dayjs from "dayjs";
@@ -10,6 +10,7 @@ import {
 } from "../../../utils/constant";
 
 export default function useAddShowtime() {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
@@ -52,6 +53,7 @@ export default function useAddShowtime() {
           description: `${successCount} showtimes added successfully, ${errorCount} failed.`,
         })
       );
+      queryClient.invalidateQueries("showtimes");
     },
     onError: (error) => {
       dispatch(
