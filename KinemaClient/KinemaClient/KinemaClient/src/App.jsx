@@ -18,6 +18,7 @@ const Register = lazy(() => import("./pages/Register"));
 const ControlPanelLayout = lazy(() =>
   import("./layouts/control-panel/ControlPanelLayout")
 );
+const HomePage = lazy(() => import("./pages/HomePage"));
 const ProvinceLayout = lazy(() =>
   import("./features/admin/province/ProvinceLayout")
 );
@@ -90,6 +91,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <ConfirmEmail />
+          </Suspense>
+        ),
+      },
+      {
+        path: "home",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <HomePage />
           </Suspense>
         ),
       },
