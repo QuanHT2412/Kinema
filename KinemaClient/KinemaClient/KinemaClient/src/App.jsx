@@ -40,6 +40,9 @@ const ShowTimeLayout = lazy(() =>
 );
 const ScreenLayout = lazy(() => import("./features/admin/screen/ScreenLayout"));
 const SeatLayout = lazy(() => import("./features/admin/seat/SeatLayout"));
+const ViewShowtimeLayout = lazy(() =>
+  import("./features/customer/showtime/ViewShowtimeLayout")
+);
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -99,6 +102,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <HomePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "showtimes/:movieId",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <ViewShowtimeLayout />
           </Suspense>
         ),
       },
