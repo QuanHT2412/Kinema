@@ -44,6 +44,9 @@ const ViewShowtimeLayout = lazy(() =>
   import("./features/customer/showtime/ViewShowtimeLayout")
 );
 const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
+const ConcessionLayout = lazy(() =>
+  import("./features/employee/concession/ConcessionLayout")
+);
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
@@ -193,6 +196,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <SeatLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "concessions",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <ConcessionLayout />
           </Suspense>
         ),
       },
