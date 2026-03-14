@@ -1,13 +1,19 @@
+using System.ComponentModel.DataAnnotations;
 
 namespace KinemaAPI.Models.DTO.Requests
 {
     public class CreateShowTimeRequestDTO
     {
+        [Required]
         public int MovieId { get; set; }
+        [Required]
         public int ScreenId { get; set; }
+        [Required]
         public List<ShowTimeData> ShowTimes { get; set; }
 
+        [Required]
         public decimal TicketPrice { get; set; }
+        [Required]
         public decimal VipTicketPrice { get; set; }
     }
 
