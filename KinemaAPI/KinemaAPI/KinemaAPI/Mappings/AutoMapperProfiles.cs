@@ -50,6 +50,8 @@ namespace KinemaAPI.Mappings
             CreateMap<Concession, ConcessionDTO>()
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}/Images/{src.ImageUrl}"));
 
+            // promotion mappings
+            CreateMap<Promotion, PromotionDTO>();
         }
     }
 
