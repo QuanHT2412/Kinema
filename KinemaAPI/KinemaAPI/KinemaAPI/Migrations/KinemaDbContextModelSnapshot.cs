@@ -357,6 +357,9 @@ namespace KinemaAPI.Migrations
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -366,8 +369,8 @@ namespace KinemaAPI.Migrations
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<int>("UsedQuantity")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
