@@ -36,6 +36,9 @@ namespace KinemaAPI.Migrations
                     b.Property<string>("BookingStatus")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CheckedInBy")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -52,6 +55,8 @@ namespace KinemaAPI.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CheckedInBy");
 
                     b.HasIndex("ShowTimeId");
 
@@ -412,6 +417,10 @@ namespace KinemaAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SeatType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ScreenId");
@@ -451,8 +460,11 @@ namespace KinemaAPI.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
 
-                    b.Property<double>("TicketPrice")
-                        .HasColumnType("float");
+                    b.Property<decimal>("TicketPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("VipTicketPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -740,11 +752,17 @@ namespace KinemaAPI.Migrations
 
             modelBuilder.Entity("KinemaAPI.Models.Domain.Booking", b =>
                 {
+                    b.HasOne("KinemaAPI.Models.Domain.ApplicationUser", "Employee")
+                        .WithMany()
+                        .HasForeignKey("CheckedInBy");
+
                     b.HasOne("KinemaAPI.Models.Domain.ShowTime", "ShowTime")
                         .WithMany()
                         .HasForeignKey("ShowTimeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Employee");
 
                     b.Navigation("ShowTime");
                 });
@@ -752,7 +770,7 @@ namespace KinemaAPI.Migrations
             modelBuilder.Entity("KinemaAPI.Models.Domain.BookingDetail", b =>
                 {
                     b.HasOne("KinemaAPI.Models.Domain.Booking", "Booking")
-                        .WithMany()
+                        .WithMany("BookingDetails")
                         .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -776,7 +794,7 @@ namespace KinemaAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("KinemaAPI.Models.Domain.ConcessionOrder", "ConcessionOrder")
-                        .WithMany()
+                        .WithMany("ConcessionOrderDetails")
                         .HasForeignKey("ConcessionOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -929,6 +947,16 @@ namespace KinemaAPI.Migrations
                     b.Navigation("EmployedTheater");
 
                     b.Navigation("ManagedTheater");
+                });
+
+            modelBuilder.Entity("KinemaAPI.Models.Domain.Booking", b =>
+                {
+                    b.Navigation("BookingDetails");
+                });
+
+            modelBuilder.Entity("KinemaAPI.Models.Domain.ConcessionOrder", b =>
+                {
+                    b.Navigation("ConcessionOrderDetails");
                 });
 #pragma warning restore 612, 618
         }
