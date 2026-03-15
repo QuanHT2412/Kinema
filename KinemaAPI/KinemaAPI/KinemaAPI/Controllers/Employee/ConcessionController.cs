@@ -7,6 +7,7 @@ using KinemaAPI.Models.DTO.Responses;
 using KinemaAPI.Repositories;
 using KinemaAPI.Services;
 using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KinemaAPI.Controllers
@@ -66,6 +67,7 @@ namespace KinemaAPI.Controllers
 
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Employee}")]
         public async Task<IActionResult> CreateConcession([FromForm] CreateConcessionRequestDTO request)
         {
             var newConcession = new Concession
@@ -116,6 +118,7 @@ namespace KinemaAPI.Controllers
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Employee}")]
         public async Task<IActionResult> UpdateConcession(int id, [FromForm] UpdateConcessionRequestDTO request)
         {
             var concession = await _unitOfWork.Concession.GetOneAsync(c => c.Id == id);
@@ -168,6 +171,7 @@ namespace KinemaAPI.Controllers
         }
 
         [HttpPut("{id}/disable")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Employee}")]
         public async Task<IActionResult> DisableConcession(int id)
         {
             var concession = await _unitOfWork.Concession.GetOneAsync(c => c.Id == id);
@@ -191,6 +195,7 @@ namespace KinemaAPI.Controllers
         }
 
         [HttpPut("{id}/enable")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Employee}")]
         public async Task<IActionResult> EnableConcession(int id)
         {
             var concession = await _unitOfWork.Concession.GetOneAsync(c => c.Id == id);
@@ -214,6 +219,7 @@ namespace KinemaAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{Constants.Role_Manager},{Constants.Role_Employee}")]
         public async Task<IActionResult> DeleteConcession(int id)
         {
             var concession = await _unitOfWork.Concession.GetOneAsync(c => c.Id == id);
