@@ -263,8 +263,8 @@ namespace KinemaAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("BonusPointsUsed")
+                        .HasColumnType("int");
 
                     b.Property<int?>("BookingId")
                         .HasColumnType("int");
@@ -275,12 +275,18 @@ namespace KinemaAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal?>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("FinalAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -292,9 +298,6 @@ namespace KinemaAPI.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentIntentId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("nvarchar(max)");
 
@@ -304,6 +307,12 @@ namespace KinemaAPI.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -316,9 +325,53 @@ namespace KinemaAPI.Migrations
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex("PromotionId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("KinemaAPI.Models.Domain.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DiscountType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DiscountValue")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promotions");
                 });
 
             modelBuilder.Entity("KinemaAPI.Models.Domain.Province", b =>
@@ -740,6 +793,9 @@ namespace KinemaAPI.Migrations
                     b.Property<int?>("ManagedTheaterId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Point")
+                        .HasColumnType("int");
+
                     b.Property<int?>("TheaterId")
                         .HasColumnType("int");
 
@@ -818,6 +874,10 @@ namespace KinemaAPI.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
+                    b.HasOne("KinemaAPI.Models.Domain.Promotion", "Promotion")
+                        .WithMany()
+                        .HasForeignKey("PromotionId");
+
                     b.HasOne("KinemaAPI.Models.Domain.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -827,6 +887,8 @@ namespace KinemaAPI.Migrations
                     b.Navigation("ConcessionOrder");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("Promotion");
 
                     b.Navigation("User");
                 });

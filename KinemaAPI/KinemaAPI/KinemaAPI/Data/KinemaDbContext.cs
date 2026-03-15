@@ -20,6 +20,7 @@ namespace KinemaAPI.Data
         public DbSet<ConcessionOrder> ConcessionOrders { get; set; }
         public DbSet<ConcessionOrderDetail> ConcessionOrderDetails { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
 
 
         public KinemaDbContext(DbContextOptions<KinemaDbContext> options)
