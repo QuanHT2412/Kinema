@@ -96,8 +96,9 @@ namespace KinemaAPI.Controllers.Manager
                     // validate showtime conflict
                     foreach (var st in sameDayShowTimes)
                     {
-                        if (startTime < st.EndTime &&
-                                                       endTime > st.StartTime)
+                        // Nếu hai suất chiếu giao nhau trong khoảng 10 phút thì conflict
+                        if (startTime < st.EndTime.Add(TimeSpan.FromMinutes(10)) &&
+                                                       endTime > st.StartTime.Add(TimeSpan.FromMinutes(-10)))
                         {
                             isValidShowtime = false;
                             break;
