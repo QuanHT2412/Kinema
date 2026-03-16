@@ -12,6 +12,7 @@
         IConcessionOrderRepository ConcessionOrder { get; }
         IConcessionOrderDetailRepository ConcessionOrderDetail { get; }
         IApplicationUserRepository ApplicationUser { get; }
+        IPromotionRepository Promotion { get; }
 
         Task SaveAsync();
     }

@@ -15,6 +15,7 @@ namespace KinemaAPI.Repositories.Impl
         public IConcessionOrderRepository ConcessionOrder { get; private set; }
         public IConcessionOrderDetailRepository ConcessionOrderDetail { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IPromotionRepository Promotion { get; private set; }
 
         public UnitOfWork(KinemaDbContext db)
         {
@@ -29,6 +30,7 @@ namespace KinemaAPI.Repositories.Impl
             ConcessionOrder = new ConcessionOrderRepository(_db);
             ConcessionOrderDetail = new ConcessionOrderDetailRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
+            Promotion = new PromotionRepository(_db);
         }
 
         public async Task SaveAsync()
