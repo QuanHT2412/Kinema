@@ -159,7 +159,7 @@ function MovieForm({ open, onClose, movieId, mode }) {
             label={<span className="font-medium">Movie Details</span>}
             className="mb-0"
           >
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Title & Genre - First row */}
               <Form.Item
                 name="title"
@@ -226,7 +226,7 @@ function MovieForm({ open, onClose, movieId, mode }) {
               <Form.Item
                 name="trailerUrl"
                 label="Trailer URL"
-                className="mb-2 "
+                className="mb-2 md:col-span-2"
               >
                 <Input placeholder="Enter trailer URL (optional)" />
               </Form.Item>
@@ -244,9 +244,9 @@ function MovieForm({ open, onClose, movieId, mode }) {
 
           {/* Movie Poster - Full width */}
           <Form.Item label="Movie Poster" name="poster">
-            <div className="flex flex-col gap-4 items-start">
+            <div className="flex flex-col md:flex-row gap-4 items-start">
               {/* Image preview on the left */}
-              <div className="w-full flex justify-center">
+              <div className="w-full md:w-1/3 flex justify-center">
                 {imagePreview ? (
                   <img
                     src={imagePreview}
@@ -275,7 +275,7 @@ function MovieForm({ open, onClose, movieId, mode }) {
               </div>
 
               {/* Upload control on the right */}
-              <div className="w-full ">
+              <div className="w-full md:w-2/3">
                 <Dragger
                   name="poster"
                   accept="image/png, image/jpg, image/jpeg"
