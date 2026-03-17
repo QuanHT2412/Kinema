@@ -8,6 +8,8 @@
         IShowTimeRepository ShowTime { get; }
         ISeatRepository Seat { get; }
         IScreenRepository Screen { get; }
+        IBookingRepository Booking { get; }
+        IBookingDetailRepository BookingDetail { get; }
         IConcessionRepository Concession { get; }
         IConcessionOrderRepository ConcessionOrder { get; }
         IConcessionOrderDetailRepository ConcessionOrderDetail { get; }

@@ -11,6 +11,8 @@ namespace KinemaAPI.Repositories.Impl
         public IShowTimeRepository ShowTime { get; private set; }
         public ISeatRepository Seat { get; private set; }
         public IScreenRepository Screen { get; private set; }
+        public IBookingRepository Booking { get; private set; }
+        public IBookingDetailRepository BookingDetail { get; private set; }
         public IConcessionRepository Concession { get; private set; }
         public IConcessionOrderRepository ConcessionOrder { get; private set; }
         public IConcessionOrderDetailRepository ConcessionOrderDetail { get; private set; }
@@ -26,6 +28,8 @@ namespace KinemaAPI.Repositories.Impl
             ShowTime = new ShowTimeRepository(_db);
             Seat = new SeatRepository(_db);
             Screen = new ScreenRepository(_db);
+            Booking = new BookingRepository(_db);
+            BookingDetail = new BookingDetailRepository(_db);
             Concession = new ConcessionRepository(_db);
             ConcessionOrder = new ConcessionOrderRepository(_db);
             ConcessionOrderDetail = new ConcessionOrderDetailRepository(_db);
