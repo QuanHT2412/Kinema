@@ -49,6 +49,9 @@ const ConcessionLayout = lazy(() =>
 );
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const PromotionLayout = lazy(() =>
+  import("./features/admin/promotion/PromotionLayout")
+);
 
 const router = createBrowserRouter([
   {
@@ -204,6 +207,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <ConcessionLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "promotions",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <PromotionLayout />
           </Suspense>
         ),
       },
