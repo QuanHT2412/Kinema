@@ -13,6 +13,7 @@
         IConcessionRepository Concession { get; }
         IConcessionOrderRepository ConcessionOrder { get; }
         IConcessionOrderDetailRepository ConcessionOrderDetail { get; }
+        IPaymentRepository Payment { get; }
         IApplicationUserRepository ApplicationUser { get; }
         IPromotionRepository Promotion { get; }
 

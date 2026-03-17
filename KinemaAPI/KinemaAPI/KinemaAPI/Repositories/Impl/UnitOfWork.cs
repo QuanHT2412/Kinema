@@ -16,6 +16,7 @@ namespace KinemaAPI.Repositories.Impl
         public IConcessionRepository Concession { get; private set; }
         public IConcessionOrderRepository ConcessionOrder { get; private set; }
         public IConcessionOrderDetailRepository ConcessionOrderDetail { get; private set; }
+        public IPaymentRepository Payment { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
         public IPromotionRepository Promotion { get; private set; }
 
@@ -33,6 +34,7 @@ namespace KinemaAPI.Repositories.Impl
             Concession = new ConcessionRepository(_db);
             ConcessionOrder = new ConcessionOrderRepository(_db);
             ConcessionOrderDetail = new ConcessionOrderDetailRepository(_db);
+            Payment = new PaymentRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
             Promotion = new PromotionRepository(_db);
         }
