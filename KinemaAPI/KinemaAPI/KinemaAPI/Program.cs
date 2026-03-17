@@ -62,12 +62,16 @@ builder.Services.AddHttpContextAccessor();
 // configure Brevo API client
 Configuration.Default.ApiKey.Add("api-key", builder.Configuration["BrevoApi:ApiKey"]);
 
+// configure setting class
+builder.Services.Configure<VNPaySettings>(builder.Configuration.GetSection("VNPay"));
+
 // declare dependency injections
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+builder.Services.AddScoped<IVNPayService, VNPayService>();
 
 
 // add AutoMapper
