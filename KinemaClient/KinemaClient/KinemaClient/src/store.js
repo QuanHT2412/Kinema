@@ -5,10 +5,12 @@ import employeeReducer from "./redux/employeeSlice";
 import customerReducer from "./redux/customerSlice";
 import screenReducer from "./redux/screenSlice";
 import seatReducer from "./redux/seatSlice";
+import bookingReducer from "./redux/bookingSlice";
 import movieReducer from "./redux/movieSlice";
 import showtimeReducer from "./redux/showtimeSlice";
 import manageShowtimeReducer from "./redux/manageShowtimeSlice";
 import concessionReducer from "./redux/concessionSlice";
+import bookingConfirmReducer from "./redux/bookingConfirmSlice";
 import promotionReducer from "./redux/promotionSlice";
 
 const store = configureStore({
@@ -20,10 +22,12 @@ const store = configureStore({
     customer: customerReducer,
     screen: screenReducer,
     seat: seatReducer,
+    booking: bookingReducer,
     movie: movieReducer,
     showtime: showtimeReducer,
     manageShowtime: manageShowtimeReducer,
     concession: concessionReducer,
+    bookingConfirm: bookingConfirmReducer,
     promotion: promotionReducer,
   },
   middleware: (getDefaultMiddleware) =>
