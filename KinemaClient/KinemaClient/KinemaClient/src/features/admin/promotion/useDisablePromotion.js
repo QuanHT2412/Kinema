@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { disablePromotion } from "../../../services/apiPromotion";
 import { useDispatch } from "react-redux";
 import { notify } from "../../../redux/notificationSlice";
@@ -8,6 +8,7 @@ import {
 } from "../../../utils/constant";
 
 export const useDisablePromotion = () => {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
@@ -19,6 +20,8 @@ export const useDisablePromotion = () => {
           message: "Promotion disabled successfully",
         })
       );
+      queryClient.invalidateQueries({ queryKey: ["promotions"] });
+      queryClient.invalidateQueries({ queryKey: ["promotion", variables] });
     },
     onError: (error) => {
       dispatch(

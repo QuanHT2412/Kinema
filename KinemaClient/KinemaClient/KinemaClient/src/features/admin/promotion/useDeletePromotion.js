@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePromotion } from "../../../services/apiPromotion";
 import { useDispatch } from "react-redux";
 import { notify } from "../../../redux/notificationSlice";
@@ -8,6 +8,7 @@ import {
 } from "../../../utils/constant";
 
 export const useDeletePromotion = () => {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   return useMutation({
@@ -19,6 +20,7 @@ export const useDeletePromotion = () => {
           message: "Promotion deleted successfully",
         })
       );
+      queryClient.invalidateQueries({ queryKey: ["promotions"] });
     },
     onError: (error) => {
       dispatch(
