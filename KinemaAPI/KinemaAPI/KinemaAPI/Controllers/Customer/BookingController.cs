@@ -104,6 +104,20 @@ namespace KinemaAPI.Controllers.Customer
         [ValidateModel]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequestDTO bookingRequest)
         {
+            // check if seats have been booked
+            var bookedSeats = await _unitOfWork.Seat.GetBookedSeatsByShowtimeId(bookingRequest.ShowtimeId);
+            foreach (var seat in bookingRequest.Seats)
+            {
+                if (bookedSeats.Any(bs => bs.Id == seat.Id))
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = $"Seat {seat.Name} has already been booked.",
+                        StatusCode = 400
+                    });
+                }
+            }
+
             // check if user has enough points to use
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (bookingRequest.PointsUsed > 0)
