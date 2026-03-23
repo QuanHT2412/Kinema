@@ -40,6 +40,9 @@ const ShowTimeLayout = lazy(() =>
 );
 const ScreenLayout = lazy(() => import("./features/admin/screen/ScreenLayout"));
 const SeatLayout = lazy(() => import("./features/admin/seat/SeatLayout"));
+const BookingLayout = lazy(() =>
+  import("./features/customer/booking/BookingLayout")
+);
 const ViewShowtimeLayout = lazy(() =>
   import("./features/customer/showtime/ViewShowtimeLayout")
 );
@@ -108,6 +111,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <HomePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "booking/:showtimeId",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <BookingLayout />
           </Suspense>
         ),
       },
