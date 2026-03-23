@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getShowtimes } from "../../../services/apiHome";
 import { useSelector, useDispatch } from "react-redux";
-import { cacheShowtimes } from "../../../redux/showtimeSlice";
+import { cacheShowtimes } from "../../../redux/showTimeSlice";
 
 export const useGetShowtimes = () => {
   const dispatch = useDispatch();

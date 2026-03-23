@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setMovieId } from "../../../redux/showtimeSlice";
+import { setMovieId } from "../../../redux/showTimeSlice";
 import MovieHero from "./MovieHero";
 import ShowtimeList from "./ShowtimeList";
 import ShowtimeLoginModal from "./ShowtimeLoginModal";

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Select, Spin } from "antd";
 import { useDispatch } from "react-redux";
-import { setProvinceId } from "../../../redux/showtimeSlice";
+import { setProvinceId } from "../../../redux/showTimeSlice";
 import useGetProvinces from "./useGetProvinces";
 
 function ProvinceSelection() {

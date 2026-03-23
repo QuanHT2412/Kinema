@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setSelectedDate } from "../../../redux/showtimeSlice";
+import { setSelectedDate } from "../../../redux/showTimeSlice";
 import DateItem from "./DateItem";
 
 function DateSelection() {

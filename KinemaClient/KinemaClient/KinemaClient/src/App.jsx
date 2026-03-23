@@ -29,7 +29,7 @@ const ManagerLayout = lazy(() =>
   import("./features/admin/manager/ManagerLayout")
 );
 const EmployeeLayout = lazy(() =>
-  import("./features/admin/Employee/EmployeeLayout")
+  import("./features/admin/employee/EmployeeLayout")
 );
 const CustomerLayout = lazy(() =>
   import("./features/admin/customer/CustomerLayout")

@@ -4,7 +4,7 @@ import { IoIosMail } from "react-icons/io";
 import { SpinnerSmall } from "../../../components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { doLoginAction } from "../../../redux/userSlice";
-import { closeLoginModal } from "../../../redux/showtimeSlice";
+import { closeLoginModal } from "../../../redux/showTimeSlice";
 import { useMutation } from "@tanstack/react-query";
 import { login as loginApi } from "../../../services/apiAuth";
 import { notify } from "../../../redux/notificationSlice";

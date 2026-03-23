@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../../redux/notificationSlice";
 import { WARNING_NOTIFICATION } from "../../../utils/constant";
-import { openLoginModal } from "../../../redux/showtimeSlice";
+import { openLoginModal } from "../../../redux/showTimeSlice";
 
 function Showtime({ isActive, time, price, id }) {
   const navigate = useNavigate();

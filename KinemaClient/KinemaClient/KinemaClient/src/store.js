@@ -7,7 +7,7 @@ import screenReducer from "./redux/screenSlice";
 import seatReducer from "./redux/seatSlice";
 import bookingReducer from "./redux/bookingSlice";
 import movieReducer from "./redux/movieSlice";
-import showtimeReducer from "./redux/showtimeSlice";
+import showtimeReducer from "./redux/showTimeSlice";
 import manageShowtimeReducer from "./redux/manageShowtimeSlice";
 import concessionReducer from "./redux/concessionSlice";
 import bookingConfirmReducer from "./redux/bookingConfirmSlice";
