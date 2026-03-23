@@ -331,6 +331,27 @@ namespace KinemaAPI.Controllers.Customer
             }
 
             var vnpParams = new SortedDictionary<string, string>(request.VnpParams);
+            if (!vnpParams.TryGetValue("vnp_SecureHash", out var secureHash))
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "Secure hash not found in response.",
+                    StatusCode = 400
+                });
+
+            vnpParams.Remove("vnp_SecureHash");
+
+            string signData = string.Join("&", vnpParams.Select(kvp =>
+                $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
+
+            string checkSum = _vnPayService.HmacSha512(_vnPaySettings.HashSecret, signData);
+
+            if (!secureHash.Equals(checkSum, StringComparison.InvariantCultureIgnoreCase))
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "Payment verification failed. Invalid secure hash.",
+                    StatusCode = 400
+                });
+
             // Check response code and status
             if (vnpParams.TryGetValue("vnp_ResponseCode", out var responseCode) &&
                 vnpParams.TryGetValue("vnp_TransactionStatus", out var transactionStatus) &&
