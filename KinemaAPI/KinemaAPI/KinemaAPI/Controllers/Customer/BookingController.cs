@@ -131,6 +131,14 @@ namespace KinemaAPI.Controllers.Customer
                         StatusCode = 404
                     });
                 }
+                if (user.Point < bookingRequest.PointsUsed)
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = "You do not have enough points to use.",
+                        StatusCode = 400
+                    });
+                }
             }
 
             // calculate total amount of booking
