@@ -104,6 +104,16 @@ namespace KinemaAPI.Controllers.Customer
         [ValidateModel]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequestDTO bookingRequest)
         {
+            // check if the seats count exceeds the limit
+            if (bookingRequest.Seats.Count > Constants.MaxBookingSeats)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = $"You can only book up to {Constants.MaxBookingSeats} seats at a time.",
+                    StatusCode = 400
+                });
+            }
+
             // check if seats have been booked
             var bookedSeats = await _unitOfWork.Seat.GetBookedSeatsByShowtimeId(bookingRequest.ShowtimeId);
             foreach (var seat in bookingRequest.Seats)
