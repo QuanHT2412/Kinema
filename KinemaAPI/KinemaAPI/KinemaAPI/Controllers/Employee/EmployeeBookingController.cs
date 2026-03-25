@@ -1,0 +1,361 @@
+﻿using AutoMapper;
+using KinemaAPI.Models.Domain;
+using KinemaAPI.Models.DTO;
+using KinemaAPI.Models.DTO.Requests;
+using KinemaAPI.Models.DTO.Responses;
+using KinemaAPI.Repositories;
+using KinemaAPI.Services;
+using KinemaAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace KinemaAPI.Controllers.Employee
+{
+    [Route("api/employee/bookings")]
+    [ApiController]
+    public class EmployeeBookingController : ControllerBase
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
+        private readonly IQRCodeService _qrCodeService;
+        public EmployeeBookingController(IUnitOfWork unitOfWork, IMapper mapper, IQRCodeService qrCodeService, IEmailService emailService)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _qrCodeService = qrCodeService;
+            _emailService = emailService;
+        }
+
+        [HttpGet("showtimes")]
+        [Authorize(Roles = Constants.Role_Employee)]
+        public async Task<IActionResult> GetShowTimes([FromQuery] EmployeeGetShowtimesRequestDTO request)
+        {
+            var showTimes = await _unitOfWork.ShowTime.GetAllAsync(
+                st => st.Screen.TheaterId == request.TheaterId && st.Date == DateTime.Parse(request.Date),
+                includeProperties: "Movie,Screen");
+
+            var showtimeGroups = showTimes.GroupBy(st => new { st.Date, st.Movie })
+                .Select(g => new
+                {
+                    g.Key.Date,
+                    Movie = _mapper.Map<MovieDTO>(g.Key.Movie),
+                    ShowTimes = g.Select(st => _mapper.Map<ShowTimeDTO>(st)).ToList()
+                });
+
+            return Ok(new SuccessResponseDTO
+            {
+                Data = showtimeGroups,
+                Message = "ShowTimes retrieved successfully."
+            });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Constants.Role_Employee)]
+        public async Task<IActionResult> CreateBooking([FromBody] BookingRequestDTO bookingRequest)
+        {
+            // check if the seats count exceeds the limit
+            if (bookingRequest.Seats.Count > Constants.MaxBookingSeats)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = $"You can only book up to {Constants.MaxBookingSeats} seats at a time.",
+                    StatusCode = 400
+                });
+            }
+
+            // check if seats have been booked
+            var bookedSeats = await _unitOfWork.Seat.GetBookedSeatsByShowtimeId(bookingRequest.ShowtimeId);
+            foreach (var seat in bookingRequest.Seats)
+            {
+                if (bookedSeats.Any(bs => bs.Id == seat.Id))
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = $"Seat {seat.Name} has already been booked.",
+                        StatusCode = 400
+                    });
+                }
+            }
+
+            // check if user has enough points to use
+            if (!string.IsNullOrEmpty(bookingRequest.UserId) && bookingRequest.PointsUsed > 0)
+            {
+                var user = await _unitOfWork.ApplicationUser.GetOneAsync(u => u.Id == bookingRequest.UserId);
+                if (user == null)
+                {
+                    return NotFound(new ErrorResponseDTO
+                    {
+                        Message = "User not found.",
+                        StatusCode = 404
+                    });
+                }
+                if (user.Point < bookingRequest.PointsUsed)
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = "You do not have enough points to use.",
+                        StatusCode = 400
+                    });
+                }
+
+                // deduct points from user
+                user.Point -= bookingRequest.PointsUsed;
+                _unitOfWork.ApplicationUser.Update(user);
+                await _unitOfWork.SaveAsync();
+            }
+
+            // calculate total amount of booking
+            var showtime = await _unitOfWork.ShowTime.GetOneAsync(st => st.Id == bookingRequest.ShowtimeId);
+            if (showtime == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "Showtime not found.",
+                    StatusCode = 404
+                });
+            }
+
+            decimal totalAmount = 0;
+
+            foreach (var seat in bookingRequest.Seats)
+            {
+                if (seat.SeatType == Constants.SeatType_Normal)
+                    totalAmount += showtime.TicketPrice;
+                else if (seat.SeatType == Constants.SeatType_Vip)
+                    totalAmount += showtime.VipTicketPrice;
+            }
+
+            // create booking
+            var booking = new Booking
+            {
+                ShowTimeId = bookingRequest.ShowtimeId,
+                BookingDate = DateTime.Now,
+                TotalAmount = totalAmount,
+                BookingStatus = Constants.BookingStatus_Success,
+                IsActive = true
+            };
+
+            // save booking
+            await _unitOfWork.Booking.AddAsync(booking);
+            await _unitOfWork.SaveAsync();
+
+            // create booking details for each seat
+            foreach (var seat in bookingRequest.Seats)
+            {
+                var bookingDetail = new BookingDetail
+                {
+                    BookingId = booking.Id,
+                    SeatId = seat.Id,
+                    SeatName = seat.Name,
+                    TicketPrice = seat.SeatType == Constants.SeatType_Vip ? showtime.VipTicketPrice : showtime.TicketPrice
+                };
+
+                // save booking detail
+                await _unitOfWork.BookingDetail.AddAsync(bookingDetail);
+                await _unitOfWork.SaveAsync();
+            }
+
+            // create concession order
+            ConcessionOrder concessionOrder = null;
+
+            if (bookingRequest.Concessions.Count > 0)
+            {
+                // calculate total price of concessions
+                decimal totalConcessionPrice = 0;
+                foreach (var concession in bookingRequest.Concessions)
+                {
+                    var concessionItem = await _unitOfWork.Concession.GetOneAsync(c => c.Id == concession.Id && c.IsActive && !c.IsRemoved);
+                    if (concessionItem == null)
+                    {
+                        return NotFound(new ErrorResponseDTO
+                        {
+                            Message = $"Concession selected not found.",
+                            StatusCode = 404
+                        });
+                    }
+
+                    totalConcessionPrice += concessionItem.Price * concession.Quantity;
+                }
+                concessionOrder = new ConcessionOrder
+                {
+                    OrderDate = DateTime.Now,
+                    TotalPrice = totalConcessionPrice,
+                    IsActive = true
+                };
+
+                // save concession order
+                await _unitOfWork.ConcessionOrder.AddAsync(concessionOrder);
+                await _unitOfWork.SaveAsync();
+
+                totalAmount += totalConcessionPrice;
+
+                // create concession order details
+                foreach (var concession in bookingRequest.Concessions)
+                {
+                    var concessionItem = await _unitOfWork.Concession.GetOneAsync(c => c.Id == concession.Id && c.IsActive && !c.IsRemoved);
+                    if (concessionItem == null)
+                    {
+                        return NotFound(new ErrorResponseDTO
+                        {
+                            Message = $"Concession selected not found.",
+                            StatusCode = 404
+                        });
+                    }
+
+                    var concessionOrderDetail = new ConcessionOrderDetail
+                    {
+                        ConcessionOrderId = concessionOrder.Id,
+                        ConcessionId = concessionItem.Id,
+                        Quantity = concession.Quantity,
+                        Price = concessionItem.Price * concession.Quantity
+                    };
+
+                    // save concession order detail
+                    await _unitOfWork.ConcessionOrderDetail.AddAsync(concessionOrderDetail);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+
+            // add bonus points for booking
+            if (!string.IsNullOrEmpty(bookingRequest.UserId))
+            {
+                var user = await _unitOfWork.ApplicationUser.GetOneAsync(u => u.Id == bookingRequest.UserId);
+                if (user != null)
+                {
+                    user.Point += (Constants.BonusPointsPerSeat * bookingRequest.Seats.Count);
+                    _unitOfWork.ApplicationUser.Update(user);
+                }
+            }
+
+            // increase promotion usage count if applicable
+            if (bookingRequest.PromotionId > 0)
+            {
+                var promotion = await _unitOfWork.Promotion.GetOneAsync(p => p.Id == bookingRequest.PromotionId && p.IsActive);
+                if (promotion == null)
+                {
+                    return NotFound(new ErrorResponseDTO
+                    {
+                        Message = "Promotion not found.",
+                        StatusCode = 404
+                    });
+                }
+                // check if promotion is valid for this booking
+                var today = DateOnly.FromDateTime(DateTime.Now);
+                if (promotion.StartDate <= today && promotion.EndDate >= today)
+                {
+                    promotion.UsedQuantity++;
+                    _unitOfWork.Promotion.Update(promotion);
+                    await _unitOfWork.SaveAsync();
+                }
+                else
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = "Promotion is not valid for this booking.",
+                        StatusCode = 400
+                    });
+                }
+            }
+
+            // create payment
+            var payment = new Payment
+            {
+                UserId = string.IsNullOrEmpty(bookingRequest.UserId) ? null : bookingRequest.UserId,
+                EmployeeId = bookingRequest.EmployeeId,
+                BookingId = booking.Id,
+                ConcessionOrderId = concessionOrder?.Id,
+                Email = bookingRequest.Email,
+                Name = bookingRequest.Username,
+                PhoneNumber = bookingRequest.Phone,
+                TotalAmount = bookingRequest.TotalAmount,
+                DiscountAmount = bookingRequest.DiscountAmount,
+                FinalAmount = bookingRequest.FinalAmount,
+                PromotionId = bookingRequest.PromotionId > 0 ? bookingRequest.PromotionId : null,
+                BonusPointsUsed = bookingRequest.PointsUsed > 0 ? bookingRequest.PointsUsed : null,
+                PaymentMethod = Constants.PaymentMethod_VnPay,
+                PaymentDate = DateTime.Now,
+                PaymentStatus = Constants.PaymentStatus_Success
+            };
+
+            // save payment
+            await _unitOfWork.Payment.AddAsync(payment);
+            await _unitOfWork.SaveAsync();
+
+            // send ticket email to customer
+            var barcodeText = $"CineMax_Ticket_{payment.Id}_{DateTime.Now:yyyyMMddHHmmss}";
+            var barcodeBytes = await _qrCodeService.GenerateQRCodeAsync(barcodeText, 300, 300);
+            await _emailService.SendEmailWithAttachmentAsync(payment.Email,
+                    "🎟 Your CineMax Ticket Confirmation",
+                    HtmlContent.GetTicketEmailHtml(barcodeText, $"{Convert.ToBase64String(barcodeBytes)}"),
+                    barcodeBytes,
+                    $"{barcodeText}.png");
+
+
+            return Ok(new SuccessResponseDTO
+            {
+                Data = new
+                {
+                    PaymentId = payment.Id,
+                },
+                Message = "Booking created successfully.",
+            });
+
+        }
+
+        [HttpPost("checkin")]
+        [Authorize(Roles = Constants.Role_Employee)]
+        public async Task<IActionResult> CheckInBooking([FromBody] CheckInBookingRequestDTO request)
+        {
+            // find payment by id
+            var payment = await _unitOfWork.Payment.GetOneAsync(p => p.Id == request.PaymentId && p.PaymentStatus == Constants.PaymentStatus_Success);
+            if (payment == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "Payment not found or not successful.",
+                    StatusCode = 404
+                });
+            }
+            var booking = await _unitOfWork.Booking.GetOneAsync(b => b.Id == payment.BookingId);
+            if (booking == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "Booking not found.",
+                    StatusCode = 404
+                });
+            }
+            // check if booking is already checked in
+            if (booking.BookingStatus == Constants.BookingStatus_CheckedIn)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "Booking has already been checked in.",
+                    StatusCode = 400
+                });
+            }
+            // update booking status to checked in
+            booking.BookingStatus = Constants.BookingStatus_CheckedIn;
+            booking.CheckedInBy = request.EmployeeId;
+            booking.LastUpdatedAt = DateTime.Now;
+            // save changes
+            _unitOfWork.Booking.Update(booking);
+            await _unitOfWork.SaveAsync();
+
+            // send email notification for user
+            await _emailService.SendEmailAsync(payment.Email,
+                "Check in successfull", "<p>Your have checked in successfully</p>");
+
+            return Ok(new SuccessResponseDTO
+            {
+                Message = "Booking checked in successfully.",
+                Data = new
+                {
+                    PaymentId = payment.Id,
+                    BookingId = booking.Id,
+                }
+            });
+        }
+    }
+}
