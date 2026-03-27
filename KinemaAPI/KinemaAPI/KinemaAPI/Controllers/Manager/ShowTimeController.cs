@@ -208,6 +208,15 @@ namespace KinemaAPI.Controllers.Manager
                     StatusCode = 404
                 });
             }
+            var bookings = await _unitOfWork.Booking.GetAllAsync(b => b.ShowTimeId == id);
+            if (bookings.Any())
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "Cannot delete ShowTime with associated bookings.",
+                    StatusCode = 400
+                });
+            }
             _unitOfWork.ShowTime.Remove(showTime);
             await _unitOfWork.SaveAsync();
             return Ok(new SuccessResponseDTO
