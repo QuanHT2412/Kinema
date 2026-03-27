@@ -274,9 +274,22 @@ namespace KinemaAPI.Controllers.Customer
                         StatusCode = 404
                     });
                 }
-                promotion.UsedQuantity++;
-                _unitOfWork.Promotion.Update(promotion);
-                await _unitOfWork.SaveAsync();
+                // check if promotion is valid for this booking
+                var today = DateOnly.FromDateTime(DateTime.Now);
+                if (promotion.StartDate <= today && promotion.EndDate >= today)
+                {
+                    promotion.UsedQuantity++;
+                    _unitOfWork.Promotion.Update(promotion);
+                    await _unitOfWork.SaveAsync();
+                }
+                else
+                {
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Message = "Promotion is not valid for this booking.",
+                        StatusCode = 400
+                    });
+                }
             }
 
             // create payment
