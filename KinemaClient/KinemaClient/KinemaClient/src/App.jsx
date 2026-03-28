@@ -58,6 +58,9 @@ const BookingResultLayout = lazy(() =>
 );
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const EmployeeBookingLayout = lazy(() =>
+  import("./features/employee/booking/EmployeeBookingLayout")
+);
 const PromotionLayout = lazy(() =>
   import("./features/admin/promotion/PromotionLayout")
 );
@@ -240,6 +243,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <ConcessionLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "booking",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <EmployeeBookingLayout />
           </Suspense>
         ),
       },
