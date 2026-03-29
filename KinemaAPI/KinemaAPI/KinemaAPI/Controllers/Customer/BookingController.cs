@@ -609,6 +609,27 @@ namespace KinemaAPI.Controllers.Customer
             }
 
             var userId = payment.UserId;
+            // don't allow cancel if the showtime is about to start in less than 2 hour
+            var showtime = await _unitOfWork.ShowTime.GetOneAsync(st => st.Id == booking.ShowTimeId);
+            if (showtime == null)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Message = "Showtime not found.",
+                    StatusCode = 404
+                });
+            }
+            var currentDateTime = DateTime.Now;
+            var showtimeDateTime = showtime.Date.Add(showtime.StartTime).AddHours(-Constants.MinCancelHoursBeforeShowtime);
+            if (currentDateTime > showtimeDateTime)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = $"You cannot cancel a booking less than {Constants.MinCancelHoursBeforeShowtime} hours before the showtime.",
+                    StatusCode = 400
+                });
+            }
+
             // update booking status to cancelled
             booking.BookingStatus = Constants.BookingStatus_Cancelled;
             booking.IsActive = false;
