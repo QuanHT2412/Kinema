@@ -476,6 +476,17 @@ namespace KinemaAPI.Controllers.Customer
                 });
             }
 
+            // check if the requester is customer, compare id and user id in payment
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (User.IsInRole(Constants.Role_Customer) && payment.UserId != userId)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = "You are not the owner of this transaction.",
+                    StatusCode = 400
+                });
+            }
+
             // get the selected seats
             var bookingDetails = await _unitOfWork.BookingDetail.GetAllAsync(bd => bd.BookingId == payment.BookingId, includeProperties: "Seat");
             var selectedSeats = bookingDetails.Where(bd => bd.Seat != null)
