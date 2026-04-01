@@ -14,8 +14,8 @@ namespace KinemaAPI.Services.Impl
         {
             var apiInstance = new TransactionalEmailsApi();
             // create a sender
-            string SenderName = _configuration.GetValue<string>("BrevoApi:SenderName") ?? "CineMax";
-            string SenderEmail = _configuration.GetValue<string>("BrevoApi:SenderEmail") ?? "contact@cinemax.com";
+            string SenderName = _configuration.GetValue<string>("BrevoApi:SenderName") ?? "Kinema";
+            string SenderEmail = _configuration.GetValue<string>("BrevoApi:SenderEmail") ?? "contact@kinema.com";
             SendSmtpEmailSender sender = new SendSmtpEmailSender(SenderName, SenderEmail);
 
             // create a receiver
@@ -34,8 +34,8 @@ namespace KinemaAPI.Services.Impl
             var apiInstance = new TransactionalEmailsApi();
 
             // create a sender
-            string SenderName = _configuration.GetValue<string>("BrevoApi:SenderName") ?? "CineMax";
-            string SenderEmail = _configuration.GetValue<string>("BrevoApi:SenderEmail") ?? "contact@cinemax.com";
+            string SenderName = _configuration.GetValue<string>("BrevoApi:SenderName") ?? "Kinema";
+            string SenderEmail = _configuration.GetValue<string>("BrevoApi:SenderEmail") ?? "contact@kinema.com";
             SendSmtpEmailSender sender = new SendSmtpEmailSender(SenderName, SenderEmail);
 
             var receivers = new List<SendSmtpEmailTo>

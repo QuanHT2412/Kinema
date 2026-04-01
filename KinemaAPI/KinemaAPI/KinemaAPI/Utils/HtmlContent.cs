@@ -6,9 +6,9 @@
         {
             return $"""
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-                        <h1 style="color: #d32f2f; text-align: center;">🎬 Your CineMax Ticket</h1>
+                        <h1 style="color: #d32f2f; text-align: center;">🎬 Your Kinema Ticket</h1>
                         <p style="font-size: 16px; color: #333; text-align: center;">
-                            Thank you for booking with <strong>CineMax</strong>! Here is your ticket:
+                            Thank you for booking with <strong>Kinema</strong>! Here is your ticket:
                         </p>
 
                         <div style="text-align: center; margin: 20px 0;">
@@ -23,11 +23,11 @@
 
                         <p style="text-align: center; font-size: 14px; color: #666;">
                             📍 Visit our website for more details: 
-                            <a href="https://www.cinemax.com" style="color: #d32f2f; text-decoration: none;">CineMax.com</a>
+                            <a href="https://www.kinema.com" style="color: #d32f2f; text-decoration: none;">Kinema.com</a>
                         </p>
 
                         <p style="text-align: center; font-size: 14px; color: #666;">
-                            🎥 Enjoy your movie! – <strong>CineMax Team</strong>
+                            🎥 Enjoy your movie! – <strong>Kinema Team</strong>
                         </p>
                     </div>
                     """;

@@ -283,10 +283,10 @@ namespace KinemaAPI.Controllers.Employee
             await _unitOfWork.SaveAsync();
 
             // send ticket email to customer
-            var barcodeText = $"CineMax_Ticket_{payment.Id}_{DateTime.Now:yyyyMMddHHmmss}";
+            var barcodeText = $"Kinema_Ticket_{payment.Id}_{DateTime.Now:yyyyMMddHHmmss}";
             var barcodeBytes = await _qrCodeService.GenerateQRCodeAsync(barcodeText, 300, 300);
             await _emailService.SendEmailWithAttachmentAsync(payment.Email,
-                    "🎟 Your CineMax Ticket Confirmation",
+                    "🎟 Your Kinema Ticket Confirmation",
                     HtmlContent.GetTicketEmailHtml(barcodeText, $"{Convert.ToBase64String(barcodeBytes)}"),
                     barcodeBytes,
                     $"{barcodeText}.png");
