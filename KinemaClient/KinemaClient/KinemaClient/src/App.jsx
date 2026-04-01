@@ -64,6 +64,9 @@ const CheckinLayout = lazy(() =>
 const EmployeeBookingLayout = lazy(() =>
   import("./features/employee/booking/EmployeeBookingLayout")
 );
+const RevenueLayout = lazy(() =>
+  import("./features/manager/revenue/RevenueLayout")
+);
 const PromotionLayout = lazy(() =>
   import("./features/admin/promotion/PromotionLayout")
 );
@@ -238,6 +241,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SpinnerLarge />}>
             <SeatLayout />
+          </Suspense>
+        ),
+      },
+      {
+        path: "revenue",
+        element: (
+          <Suspense fallback={<SpinnerLarge />}>
+            <RevenueLayout />
           </Suspense>
         ),
       },
