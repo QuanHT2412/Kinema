@@ -65,7 +65,7 @@ function TicketDetail({
 
   // // Generate barcode text
   // const barcodeText =
-  //   "CineMax_Ticket_" +
+  //   "Kinema_Ticket_" +
   //   payment.id +
   //   "_" +
   //   dayjs(payment.paymentDate).format("YYYYMMDDHHmmss");
@@ -224,7 +224,7 @@ function TicketDetail({
       <div className="pt-4 text-center">
         <img
           src={`https://api.qrserver.com/v1/create-qr-code/?data=${
-            "CineMax_Ticket_" +
+            "Kinema_Ticket_" +
             payment.id +
             "_" +
             dayjs(payment.paymentDate).format("YYYYMMDDHHmmss")

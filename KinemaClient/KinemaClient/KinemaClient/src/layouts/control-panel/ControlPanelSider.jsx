@@ -51,7 +51,7 @@ function ControlPanelSider({ collapsed }) {
       className="h-screen sticky! top-0 left-0 bottom-0 bg-gray-900"
     >
       <div className="h-16 text-gray-50 font-bold tracking-wider text-2xl flex items-center justify-center mb-2">
-        {collapsed ? "🍿" : "CINEMAX"}
+        {collapsed ? "🍿" : "KINEMA"}
       </div>
       <Menu
         className="bg-gray-900! text-white tracking-wide space-y-2"

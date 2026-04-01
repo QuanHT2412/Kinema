@@ -40,9 +40,9 @@ function CheckinLayout() {
   // Handle check-in process
   const handleCheckin = useCallback(
     (input) => {
-      // Nếu input là mã vé CineMax_Ticket_{paymentId}_{datetime}, tách paymentId
+      // Nếu input là mã vé Kinema_Ticket_{paymentId}_{datetime}, tách paymentId
       let ticketId = input;
-      if (typeof input === "string" && input.startsWith("CineMax_Ticket_")) {
+      if (typeof input === "string" && input.startsWith("Kinema_Ticket_")) {
         const parts = input.split("_");
         if (parts.length >= 3 && !isNaN(parts[2])) {
           ticketId = parts[2];

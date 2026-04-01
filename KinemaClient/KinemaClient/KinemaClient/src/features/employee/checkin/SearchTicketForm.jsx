@@ -15,8 +15,8 @@ function SearchTicketForm({ onCheckin }) {
       setLoading(true);
       const { ticketId } = values;
 
-      // Validate ticket ID format (CineMax_Ticket_paymentId_datetime)
-      if (!ticketId.startsWith("CineMax_Ticket_")) {
+      // Validate ticket ID format (Kinema_Ticket_paymentId_datetime)
+      if (!ticketId.startsWith("Kinema_Ticket_")) {
         dispatch(
           notify({
             type: ERROR_NOTIFICATION,
@@ -90,7 +90,7 @@ function SearchTicketForm({ onCheckin }) {
           ]}
         >
           <Input
-            placeholder="Enter CineMax_Ticket_ID"
+            placeholder="Enter Kinema_Ticket_ID"
             size="large"
             prefix={<FaSearch className="mr-2 text-gray-400" />}
           />
