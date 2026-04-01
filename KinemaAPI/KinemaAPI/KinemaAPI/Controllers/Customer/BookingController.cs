@@ -619,7 +619,21 @@ namespace KinemaAPI.Controllers.Customer
                 });
             }
 
+            // don't allow cancel if user has cancelled 3 payments in the last 30 days
             var userId = payment.UserId;
+            var recentCancelledPayments = await _unitOfWork.Payment.GetAllAsync(
+                p => p.UserId == userId && p.PaymentStatus == Constants.PaymentStatus_Cancelled &&
+                     p.PaymentDate >= DateTime.Now.AddDays(-Constants.DaysToTrackCancelledBookings));
+
+            if (recentCancelledPayments != null && recentCancelledPayments.Count() >= Constants.MaxCancelledBookingsPerMonth)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Message = $"You have reached the limit of {Constants.MaxCancelledBookingsPerMonth} cancellations in the last {Constants.DaysToTrackCancelledBookings} days.",
+                    StatusCode = 400
+                });
+            }
+
             // don't allow cancel if the showtime is about to start in less than 2 hour
             var showtime = await _unitOfWork.ShowTime.GetOneAsync(st => st.Id == booking.ShowTimeId);
             if (showtime == null)
